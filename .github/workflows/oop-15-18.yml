@@ -1,0 +1,28 @@
+name: Check OOP labs 15-18
+
+on:
+  push:
+    paths:
+      - 'lab15v9/**'
+      - 'lab16v9/**'
+      - 'lab17v9/**'
+      - 'lab18v9/**'
+      - '.github/workflows/oop-15-18.yml'
+  workflow_dispatch:
+
+jobs:
+  test-labs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - name: Build and check labs
+        shell: bash
+        run: |
+          set -euo pipefail
+          for n in 15 16 17 18; do
+            dotnet build "lab${n}v9/lab${n}v9.csproj" -c Release
+            dotnet run --no-build -c Release --project "lab${n}v9/lab${n}v9.csproj" -- --test
+          done
